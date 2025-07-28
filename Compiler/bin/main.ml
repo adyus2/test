@@ -16,17 +16,20 @@ let parse_stdin () : comp_unit =
       Printf.eprintf "Parser error\n";
       exit 1
 
-let () =
-  (* 1. 从stdin解析源码 *)
+(* 主函数逻辑 *)
+let run_program () =
+  (* 1. 解析源码 *)
   let ast = parse_stdin () in
   
-  (* 2. 执行语义分析 *)
-  try
-    analyze ast
+  (* 2. 执行语义分析（失败时终止） *)
+  try analyze ast
   with SemanticError msg ->
     Printf.eprintf "Semantic error: %s\n" msg;
-  
-  
-  (* 3. 生成汇编代码并输出到stdout *)
+  (* 关键修复：语义错误时退出 *)
+
+  (* 3. 生成汇编代码 *)
   let asm_code = compile ast in
   print_string asm_code
+
+(* 程序入口 *)
+let () = run_program ()
