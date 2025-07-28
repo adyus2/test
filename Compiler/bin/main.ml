@@ -31,5 +31,15 @@ let run_program () =
   let asm_code = compile ast in
   print_string asm_code
 
-(* 程序入口 *)
-let () = run_program ()
+(* 在 run_program 函数后添加 *)
+external caml_startup : string array -> unit = "caml_startup"
+
+let () = 
+  let argv = [| "compiler" |] in (* 模拟命令行参数 *)
+  caml_startup argv
+
+let main () =  (* 新增符合C约定的main函数 *)
+  run_program ();
+  0
+
+let () = Callback.register "main" main
