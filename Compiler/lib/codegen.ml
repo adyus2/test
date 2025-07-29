@@ -396,4 +396,4 @@ let compile cu =
     if not !main_exists then
         failwith "Missing main function";
     
-    ".text\n" ^ String.concat "\n\n" funcs_asm
+    String.concat "\n\n" funcs_asm
